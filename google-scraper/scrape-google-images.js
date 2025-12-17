@@ -6,6 +6,10 @@ const MAX_IMAGES = parseInt(process.argv[3]) || 50;
 const OUTPUT_DIR = "./google-images";
 
 async function scrapeGoogleImages(query, maxImages) {
+  // Delete old data first
+  console.log("🗑️ Deleting old scraped data...");
+  await fs.emptyDir(OUTPUT_DIR);
+  
   console.log(`🔍 Searching Google Images for: "${query}"`);
   console.log(`📸 Max images to fetch: ${maxImages}\n`);
 

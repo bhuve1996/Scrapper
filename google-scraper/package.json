@@ -12,6 +12,7 @@
   "description": "",
   "dependencies": {
     "fs-extra": "^11.3.2",
+    "jszip": "^3.10.1",
     "puppeteer": "^24.33.0"
   }
 }
