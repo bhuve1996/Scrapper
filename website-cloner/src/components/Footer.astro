@@ -1,0 +1,48 @@
+---
+import { loadWebsiteData } from "../utils/data-loader";
+
+const data = await loadWebsiteData();
+const firstPage = data.pages[0];
+const footerSection = firstPage?.structure.sections.find(s => 
+  s.tag === 'footer' || s.className.includes('footer') || s.id.includes('footer')
+);
+---
+
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-content">
+      <p>&copy; {new Date().getFullYear()} Cloned Website. All rights reserved.</p>
+      {footerSection && (
+        <p class="footer-note">Rebuilt with Astro.js from scraped data</p>
+      )}
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: #333;
+    color: #fff;
+    padding: 2rem 0;
+    margin-top: auto;
+  }
+  
+  .footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+  
+  .footer-content {
+    text-align: center;
+  }
+  
+  .footer-content p {
+    margin: 0.5rem 0;
+  }
+  
+  .footer-note {
+    font-size: 0.9rem;
+    color: #999;
+  }
+</style>

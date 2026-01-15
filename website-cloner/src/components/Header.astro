@@ -1,0 +1,100 @@
+---
+import { loadWebsiteData } from "../utils/data-loader";
+
+const data = await loadWebsiteData();
+const firstPage = data.pages[0];
+const headerSection = firstPage?.structure.sections.find(s => 
+  s.tag === 'header' || s.className.includes('header') || s.id.includes('header')
+);
+const navSection = firstPage?.structure.sections.find(s => 
+  s.tag === 'nav' || s.className.includes('nav') || s.id.includes('nav')
+);
+---
+
+<header class="site-header">
+  {navSection && (
+    <nav class="site-nav">
+      <div class="nav-container">
+        <a href="/" class="logo">Logo</a>
+        <ul class="nav-links">
+          {data.structure.routes.slice(0, 5).map(route => (
+            <li>
+              <a href={route.path}>{route.title || route.path}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </nav>
+  )}
+  {headerSection && (
+    <div class="header-content">
+      <h1>{firstPage?.structure.title}</h1>
+      {firstPage?.structure.meta.description && (
+        <p>{firstPage?.structure.meta.description}</p>
+      )}
+    </div>
+  )}
+</header>
+
+<style>
+  .site-header {
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  
+  .site-nav {
+    padding: 1rem 0;
+  }
+  
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+  }
+  
+  .nav-links a {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s;
+  }
+  
+  .nav-links a:hover {
+    color: #0070f3;
+  }
+  
+  .header-content {
+    text-align: center;
+    padding: 3rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .header-content h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .header-content p {
+    font-size: 1.2rem;
+    color: #666;
+  }
+</style>
