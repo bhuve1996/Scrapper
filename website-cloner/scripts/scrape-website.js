@@ -253,19 +253,26 @@ async function downloadAssets() {
     try {
       const response = await axios.get(img.url, { responseType: 'arraybuffer', timeout: 30000 });
       
-      // Get content type from response header
+      // Get content type from response header (most reliable)
       const contentType = response.headers['content-type'] || '';
-      let ext = path.extname(new URL(img.url).pathname);
+      let ext = '';
       
-      // Map content type to extension if URL extension is missing or incorrect
-      if (!ext || ext === '') {
-        if (contentType.includes('image/svg+xml')) ext = '.svg';
-        else if (contentType.includes('image/png')) ext = '.png';
-        else if (contentType.includes('image/jpeg') || contentType.includes('image/jpg')) ext = '.jpg';
-        else if (contentType.includes('image/webp')) ext = '.webp';
-        else if (contentType.includes('image/gif')) ext = '.gif';
-        else if (contentType.includes('image/x-icon') || contentType.includes('image/vnd.microsoft.icon')) ext = '.ico';
-        else ext = '.jpg'; // default fallback
+      // Prioritize Content-Type header over URL extension (more reliable)
+      if (contentType.includes('image/svg+xml')) {
+        ext = '.svg';
+      } else if (contentType.includes('image/png')) {
+        ext = '.png';
+      } else if (contentType.includes('image/jpeg') || contentType.includes('image/jpg')) {
+        ext = '.jpg';
+      } else if (contentType.includes('image/webp')) {
+        ext = '.webp';
+      } else if (contentType.includes('image/gif')) {
+        ext = '.gif';
+      } else if (contentType.includes('image/x-icon') || contentType.includes('image/vnd.microsoft.icon')) {
+        ext = '.ico';
+      } else {
+        // Fallback to URL extension if Content-Type is not available
+        ext = path.extname(new URL(img.url).pathname) || '.jpg';
       }
       
       const filename = `image_${i}${ext}`;
