@@ -4,6 +4,7 @@ import * as cheerio from "cheerio";
 import fs from "fs-extra";
 import JSZip from "jszip";
 import path from "path";
+import { execSync } from "child_process";
 
 const args = process.argv.slice(2);
 const KEEP_OLD_DATA = args.includes('--keep');
@@ -246,6 +247,20 @@ async function crawl(url, baseUrl, maxPages = 10) {
   }
 }
 
+async function checkAndInstallDependencies() {
+  const nodeModulesPath = path.join(process.cwd(), 'node_modules');
+  if (!await fs.pathExists(nodeModulesPath)) {
+    console.log("📦 Installing dependencies...");
+    try {
+      execSync('npm install', { stdio: 'inherit', cwd: process.cwd() });
+      console.log("✅ Dependencies installed!\n");
+    } catch (err) {
+      console.log("❌ Failed to install dependencies. Please run 'npm install' manually.");
+      process.exit(1);
+    }
+  }
+}
+
 async function main() {
   if (!BASE_URL) {
     console.log("❗ Usage: node scrape-css.js <website_url> [--keep]");
@@ -257,6 +272,9 @@ async function main() {
     console.log("   Example: node scrape-css.js https://example.com --keep");
     process.exit(1);
   }
+
+  // Check and install dependencies if needed
+  await checkAndInstallDependencies();
 
   await fs.ensureDir(OUTPUT_DIR);
 

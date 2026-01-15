@@ -2,6 +2,7 @@ import puppeteer from "puppeteer";
 import fs from "fs-extra";
 import JSZip from "jszip";
 import path from "path";
+import { execSync } from "child_process";
 
 const args = process.argv.slice(2);
 const KEEP_OLD_DATA = args.includes('--keep');
@@ -441,6 +442,20 @@ async function scrapeGoogleMapsComplete(query) {
   };
 }
 
+async function checkAndInstallDependencies() {
+  const nodeModulesPath = path.join(process.cwd(), 'node_modules');
+  if (!await fs.pathExists(nodeModulesPath)) {
+    console.log("📦 Installing dependencies...");
+    try {
+      execSync('npm install', { stdio: 'inherit', cwd: process.cwd() });
+      console.log("✅ Dependencies installed!\n");
+    } catch (err) {
+      console.log("❌ Failed to install dependencies. Please run 'npm install' manually.");
+      process.exit(1);
+    }
+  }
+}
+
 async function main() {
   if (!SEARCH_QUERY) {
     console.log("❗ Usage: node scrape-maps-complete.js \"business name and address\" [--keep]");
@@ -452,6 +467,9 @@ async function main() {
     console.log("   Example: node scrape-maps-complete.js \"Coffee Shop\" --keep");
     process.exit(1);
   }
+
+  // Check and install dependencies if needed
+  await checkAndInstallDependencies();
 
   console.log("🚀 Google Maps COMPLETE Data Scraper\n");
   console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");

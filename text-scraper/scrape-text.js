@@ -3,6 +3,8 @@ import * as cheerio from "cheerio";
 import fs from "fs-extra";
 import JSZip from "jszip";
 import sanitizeHtml from "sanitize-html";
+import path from "path";
+import { execSync } from "child_process";
 
 const BASE_URL = process.argv[2];
 const visited = new Set();
@@ -105,11 +107,28 @@ async function saveResults() {
   console.log("\n📦 Created: output/website-text.zip");
 }
 
+async function checkAndInstallDependencies() {
+  const nodeModulesPath = path.join(process.cwd(), 'node_modules');
+  if (!await fs.pathExists(nodeModulesPath)) {
+    console.log("📦 Installing dependencies...");
+    try {
+      execSync('npm install', { stdio: 'inherit', cwd: process.cwd() });
+      console.log("✅ Dependencies installed!\n");
+    } catch (err) {
+      console.log("❌ Failed to install dependencies. Please run 'npm install' manually.");
+      process.exit(1);
+    }
+  }
+}
+
 async function main() {
   if (!BASE_URL) {
     console.log("❗ Usage: node scrape-text.js https://example.com");
     process.exit(1);
   }
+
+  // Check and install dependencies if needed
+  await checkAndInstallDependencies();
 
   const root = BASE_URL.endsWith("/") ? BASE_URL : BASE_URL + "/";
 
