@@ -7,7 +7,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "scrape": "node scripts/scrape-website.js"
+    "scrape": "node scripts/scrape-website.js",
+    "package": "node scripts/package-project.js",
+    "clear": "node scripts/clear-scraped-data.js"
   },
   "dependencies": {
     "astro": "^5.16.9",
@@ -16,5 +18,8 @@
     "fs-extra": "^11.3.3",
     "jszip": "^3.10.1",
     "puppeteer": "^24.35.0"
+  },
+  "devDependencies": {
+    "archiver": "^7.0.1"
   }
 }

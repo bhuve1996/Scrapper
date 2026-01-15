@@ -252,11 +252,26 @@ async function downloadAssets() {
     const img = websiteData.assets.images[i];
     try {
       const response = await axios.get(img.url, { responseType: 'arraybuffer', timeout: 30000 });
-      const ext = path.extname(new URL(img.url).pathname) || '.jpg';
+      
+      // Get content type from response header
+      const contentType = response.headers['content-type'] || '';
+      let ext = path.extname(new URL(img.url).pathname);
+      
+      // Map content type to extension if URL extension is missing or incorrect
+      if (!ext || ext === '') {
+        if (contentType.includes('image/svg+xml')) ext = '.svg';
+        else if (contentType.includes('image/png')) ext = '.png';
+        else if (contentType.includes('image/jpeg') || contentType.includes('image/jpg')) ext = '.jpg';
+        else if (contentType.includes('image/webp')) ext = '.webp';
+        else if (contentType.includes('image/gif')) ext = '.gif';
+        else if (contentType.includes('image/x-icon') || contentType.includes('image/vnd.microsoft.icon')) ext = '.ico';
+        else ext = '.jpg'; // default fallback
+      }
+      
       const filename = `image_${i}${ext}`;
       await fs.writeFile(path.join(OUTPUT_DIR, "assets", "images", filename), response.data);
       img.localPath = `assets/images/${filename}`;
-      console.log(`✔ Downloaded: ${filename}`);
+      console.log(`✔ Downloaded: ${filename} (${contentType || 'unknown type'})`);
     } catch (err) {
       console.log(`❌ Failed: ${img.url}`);
     }

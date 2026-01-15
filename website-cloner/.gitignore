@@ -25,7 +25,5 @@ scraped-data/
 .vscode/
 .idea/
 *.swp
-*.swo
-
-# Astro
+*.swo# Astro
 .astro/
