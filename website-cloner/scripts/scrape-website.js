@@ -475,7 +475,7 @@ async function createZipArchive() {
       const sizeMB = (archive.pointer() / 1024 / 1024).toFixed(2);
       console.log(`\n✅ ZIP created: scraped-data.zip (${sizeMB} MB)`);
       console.log(`   📁 Location: ${zipPath}`);
-      console.log(`\n📦 ZIP Contents:`);
+      console.log(`\n📦 ZIP Contents (scraped data only):`);
       console.log(`   • website-data.json (complete structured data)`);
       console.log(`   • pages/ (${websiteData.pages.length} HTML pages)`);
       console.log(`   • assets/images/ (${websiteData.assets.images.length} images)`);
@@ -492,8 +492,9 @@ async function createZipArchive() {
 
     archive.pipe(output);
 
-    // Add entire scraped-data directory including README
-    archive.directory(OUTPUT_DIR, "scraped-data");
+    // Add only the contents of scraped-data directory, not the directory itself
+    // This ensures only scraped data is included, not project files
+    archive.directory(OUTPUT_DIR, false);
 
     archive.finalize();
   });
