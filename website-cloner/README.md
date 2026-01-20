@@ -30,12 +30,33 @@ Visit `http://localhost:4321` to see the cloned website.
 
 | Command | Description |
 |---------|-------------|
-| `npm run scrape <url>` | Scrape a website and download all assets |
+| `npm run scrape <url>` | Scrape a website and download all assets (standard scraper) |
+| `npm run scrape-dynamic <url>` | Scrape JavaScript-heavy websites (Framer, React, Vue, etc.) with full JS execution |
 | `npm run build` | Build the static site |
 | `npm run preview` | Preview the built site |
 | `npm run dev` | Start development server |
 | `npm run package` | Package project for distribution (creates ZIP and folder) |
 | `npm run clear` | Clear all scraped data (asks for confirmation) |
+
+## 🔧 Scraper Types
+
+### Standard Scraper (`npm run scrape`)
+- Best for: Traditional websites, static HTML sites
+- Features: Fast scraping, basic JavaScript rendering
+- Use when: Website has minimal JavaScript or server-rendered content
+
+### Dynamic Scraper (`npm run scrape-dynamic`)
+- Best for: JavaScript-heavy websites (Framer, React, Vue, Next.js, etc.)
+- Features:
+  - ✅ Full JavaScript execution with Puppeteer
+  - ✅ Waits for dynamic content to load
+  - ✅ Monitors network requests to capture all assets
+  - ✅ Scrolls page to trigger lazy-loaded content
+  - ✅ Extracts inline and computed CSS styles
+  - ✅ Captures background images
+  - ✅ Downloads fonts
+  - ✅ Waits for images to fully load
+- Use when: Website relies heavily on JavaScript for rendering content
 
 ## 📦 Package Project for Distribution
 

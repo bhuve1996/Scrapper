@@ -8,6 +8,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "scrape": "node scripts/scrape-website.js",
+    "scrape-dynamic": "node scripts/scrape-dynamic-website.js",
     "package": "node scripts/package-project.js",
     "clear": "node scripts/clear-scraped-data.js"
   },
